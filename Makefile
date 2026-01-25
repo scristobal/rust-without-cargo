@@ -5,7 +5,7 @@ BUILD = build
 
 .PHONY: all clean
 
-all: $(BUILD)/factorial $(BUILD)/hello
+all: $(BUILD)/factorial $(BUILD)/hello $(BUILD)/dist
 
 $(BUILD):
 	mkdir -p $(BUILD)
@@ -36,6 +36,10 @@ $(BUILD)/hello: hello.rs $(BUILD)/hello.o | $(BUILD)
 
 $(BUILD)/hello.o: hello.c | $(BUILD)
 	gcc -c hello.c -o $(BUILD)/hello.o
+
+# dist example (Rust callback to C's qsort)
+$(BUILD)/dist: dist.rs | $(BUILD)
+	rustc dist.rs -o $(BUILD)/dist
 
 clean:
 	rm -rf $(BUILD)
