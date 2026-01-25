@@ -1,16 +1,43 @@
+MINI_GMP = external/gmp/mini-gmp
 
-example_dyn: some-c.o some-rust.rs
-	rustc some-rust.rs -o example_dyn -C link-arg=some-c.o
+.PHONY: all clean
 
-example_static: libsomec.a
-	rustc some-rust.rs -o example_static -l somec -L .
+all: factorial hello
 
-libsomec.a: some-c.o
-	ar rcs libsomec.a some-c.o
+# submodule check
+$(MINI_GMP)/mini-gmp.c:
+	@echo "Error: git submodules not initialized. Run:"
+	@echo "  git submodule update --init"
+	@exit 1
 
-some-c.o: some-c.c
-	gcc -c some-c.c -o some-c.o
+# mini-gmp example
+factorial: factorial.rs libminigmp.a
+	rustc factorial.rs -l minigmp -L . -o factorial
+
+# mini-gmp example (dynamic)
+factorial_dyn: factorial.rs mini-gmp.o
+	rustc factorial.rs -C link-arg=mini-gmp.o -o factorial_dyn
+
+libminigmp.a: mini-gmp.o
+	ar rcs libminigmp.a mini-gmp.o
+
+mini-gmp.o: $(MINI_GMP)/mini-gmp.c $(MINI_GMP)/mini-gmp.h
+	gcc -c $(MINI_GMP)/mini-gmp.c -o mini-gmp.o
+
+# hello world example
+hello: hello.rs libhello.a
+	rustc hello.rs -l hello -L . -o hello
+
+# hello world example (dynamic)
+hello_dyn: hello.rs hello.o
+	rustc hello.rs -C link-arg=hello.o -o hello_dyn
+
+libhello.a: hello.o
+	ar rcs libhello.a hello.o
+
+hello.o: hello.c
+	gcc -c hello.c -o hello.o
 
 clean:
-	rm example_static example_dyn some-c.o libsomec.a
+	rm -f factorial factorial_dyn mini-gmp.o libminigmp.a hello hello_dyn hello.o libhello.a
 
