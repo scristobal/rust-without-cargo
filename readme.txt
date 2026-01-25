@@ -1,1 +1,1 @@
-Going all FFI into C from Rust without Cargo, just gcc, rustc and make
+Insidous Rust adventures in C wonderland
