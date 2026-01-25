@@ -30,16 +30,9 @@ $(BUILD)/libminigmp.a: $(BUILD)/mini-gmp.o
 $(BUILD)/mini-gmp.o: $(MINI_GMP)/mini-gmp.c $(MINI_GMP)/mini-gmp.h | $(BUILD)
 	gcc -c $(MINI_GMP)/mini-gmp.c -o $(BUILD)/mini-gmp.o
 
-# hello world example
-$(BUILD)/hello: hello.rs $(BUILD)/libhello.a | $(BUILD)
-	rustc hello.rs -l hello -L $(BUILD) -o $(BUILD)/hello
-
-# hello world example (dynamic)
-$(BUILD)/hello_dyn: hello.rs $(BUILD)/hello.o | $(BUILD)
-	rustc hello.rs -C link-arg=$(BUILD)/hello.o -o $(BUILD)/hello_dyn
-
-$(BUILD)/libhello.a: $(BUILD)/hello.o
-	ar rcs $(BUILD)/libhello.a $(BUILD)/hello.o
+# hello world example (Rust calls C calls Rust)
+$(BUILD)/hello: hello.rs $(BUILD)/hello.o | $(BUILD)
+	rustc hello.rs -C link-arg=$(BUILD)/hello.o -o $(BUILD)/hello
 
 $(BUILD)/hello.o: hello.c | $(BUILD)
 	gcc -c hello.c -o $(BUILD)/hello.o
