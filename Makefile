@@ -1,8 +1,14 @@
-MINI_GMP = external/gmp/mini-gmp
+EXTERNAL = external
+GMP = $(EXTERNAL)/gmp
+MINI_GMP = $(GMP)/mini-gmp
+BUILD = build
 
 .PHONY: all clean
 
-all: factorial hello
+all: $(BUILD)/factorial $(BUILD)/hello
+
+$(BUILD):
+	mkdir -p $(BUILD)
 
 # submodule check
 $(MINI_GMP)/mini-gmp.c:
@@ -11,33 +17,33 @@ $(MINI_GMP)/mini-gmp.c:
 	@exit 1
 
 # mini-gmp example
-factorial: factorial.rs libminigmp.a
-	rustc factorial.rs -l minigmp -L . -o factorial
+$(BUILD)/factorial: factorial.rs $(BUILD)/libminigmp.a | $(BUILD)
+	rustc factorial.rs -l minigmp -L $(BUILD) -o $(BUILD)/factorial
 
 # mini-gmp example (dynamic)
-factorial_dyn: factorial.rs mini-gmp.o
-	rustc factorial.rs -C link-arg=mini-gmp.o -o factorial_dyn
+$(BUILD)/factorial_dyn: factorial.rs $(BUILD)/mini-gmp.o | $(BUILD)
+	rustc factorial.rs -C link-arg=$(BUILD)/mini-gmp.o -o $(BUILD)/factorial_dyn
 
-libminigmp.a: mini-gmp.o
-	ar rcs libminigmp.a mini-gmp.o
+$(BUILD)/libminigmp.a: $(BUILD)/mini-gmp.o
+	ar rcs $(BUILD)/libminigmp.a $(BUILD)/mini-gmp.o
 
-mini-gmp.o: $(MINI_GMP)/mini-gmp.c $(MINI_GMP)/mini-gmp.h
-	gcc -c $(MINI_GMP)/mini-gmp.c -o mini-gmp.o
+$(BUILD)/mini-gmp.o: $(MINI_GMP)/mini-gmp.c $(MINI_GMP)/mini-gmp.h | $(BUILD)
+	gcc -c $(MINI_GMP)/mini-gmp.c -o $(BUILD)/mini-gmp.o
 
 # hello world example
-hello: hello.rs libhello.a
-	rustc hello.rs -l hello -L . -o hello
+$(BUILD)/hello: hello.rs $(BUILD)/libhello.a | $(BUILD)
+	rustc hello.rs -l hello -L $(BUILD) -o $(BUILD)/hello
 
 # hello world example (dynamic)
-hello_dyn: hello.rs hello.o
-	rustc hello.rs -C link-arg=hello.o -o hello_dyn
+$(BUILD)/hello_dyn: hello.rs $(BUILD)/hello.o | $(BUILD)
+	rustc hello.rs -C link-arg=$(BUILD)/hello.o -o $(BUILD)/hello_dyn
 
-libhello.a: hello.o
-	ar rcs libhello.a hello.o
+$(BUILD)/libhello.a: $(BUILD)/hello.o
+	ar rcs $(BUILD)/libhello.a $(BUILD)/hello.o
 
-hello.o: hello.c
-	gcc -c hello.c -o hello.o
+$(BUILD)/hello.o: hello.c | $(BUILD)
+	gcc -c hello.c -o $(BUILD)/hello.o
 
 clean:
-	rm -f factorial factorial_dyn mini-gmp.o libminigmp.a hello hello_dyn hello.o libhello.a
+	rm -rf $(BUILD)
 
