@@ -5,7 +5,7 @@ BUILD = build
 
 .PHONY: all clean
 
-all: $(BUILD)/factorial $(BUILD)/hello $(BUILD)/dist
+all: $(BUILD)/factorial $(BUILD)/hello $(BUILD)/dist $(BUILD)/errno
 
 $(BUILD):
 	mkdir -p $(BUILD)
@@ -40,6 +40,10 @@ $(BUILD)/hello.o: hello.c | $(BUILD)
 # dist example (Rust callback to C's qsort)
 $(BUILD)/dist: dist.rs | $(BUILD)
 	rustc dist.rs -o $(BUILD)/dist
+
+# errno example (error handling across FFI)
+$(BUILD)/errno: errno.rs | $(BUILD)
+	rustc errno.rs -o $(BUILD)/errno
 
 clean:
 	rm -rf $(BUILD)
