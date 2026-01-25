@@ -1,6 +1,4 @@
-EXTERNAL = external
-GMP = $(EXTERNAL)/gmp
-MINI_GMP = $(GMP)/mini-gmp
+MINI_GMP = external/gmp/mini-gmp
 BUILD = build
 
 .PHONY: all clean
@@ -18,11 +16,11 @@ $(MINI_GMP)/mini-gmp.c:
 
 # mini-gmp example
 $(BUILD)/factorial: factorial.rs $(BUILD)/libminigmp.a | $(BUILD)
-	rustc --edition=2024 factorial.rs -l minigmp -L $(BUILD) -o $(BUILD)/factorial
+	rustc factorial.rs -l minigmp -L $(BUILD) -o $(BUILD)/factorial
 
 # mini-gmp example (dynamic)
 $(BUILD)/factorial_dyn: factorial.rs $(BUILD)/mini-gmp.o | $(BUILD)
-	rustc --edition=2024 factorial.rs -C link-arg=$(BUILD)/mini-gmp.o -o $(BUILD)/factorial_dyn
+	rustc factorial.rs -C link-arg=$(BUILD)/mini-gmp.o -o $(BUILD)/factorial_dyn
 
 $(BUILD)/libminigmp.a: $(BUILD)/mini-gmp.o
 	ar rcs $(BUILD)/libminigmp.a $(BUILD)/mini-gmp.o
@@ -32,22 +30,22 @@ $(BUILD)/mini-gmp.o: $(MINI_GMP)/mini-gmp.c $(MINI_GMP)/mini-gmp.h | $(BUILD)
 
 # hello world example (Rust calls C calls Rust)
 $(BUILD)/hello: hello.rs $(BUILD)/hello.o | $(BUILD)
-	rustc --edition=2024 hello.rs -C link-arg=$(BUILD)/hello.o -o $(BUILD)/hello
+	rustc hello.rs -C link-arg=$(BUILD)/hello.o -o $(BUILD)/hello
 
 $(BUILD)/hello.o: hello.c | $(BUILD)
 	gcc -c hello.c -o $(BUILD)/hello.o
 
 # dist example (Rust callback to C's qsort)
 $(BUILD)/dist: dist.rs | $(BUILD)
-	rustc --edition=2024 dist.rs -o $(BUILD)/dist
+	rustc dist.rs -o $(BUILD)/dist
 
 # errno example (error handling across FFI)
 $(BUILD)/errno: errno.rs | $(BUILD)
-	rustc --edition=2024 errno.rs -o $(BUILD)/errno
+	rustc errno.rs -o $(BUILD)/errno
 
 # state example (atomic + thread-local across FFI)
 $(BUILD)/state: state.rs $(BUILD)/state.o | $(BUILD)
-	rustc --edition=2024 state.rs -C link-arg=$(BUILD)/state.o -o $(BUILD)/state
+	rustc state.rs -C link-arg=$(BUILD)/state.o -o $(BUILD)/state
 
 $(BUILD)/state.o: state.c | $(BUILD)
 	gcc -c state.c -o $(BUILD)/state.o
