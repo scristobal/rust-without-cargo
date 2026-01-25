@@ -23,11 +23,11 @@ impl Point {
 }
 
 unsafe extern "C" fn dist_cmp(a: *const c_void, b: *const c_void) -> c_int {
-    let a = &*(a as *const Point);
-    let b = &*(b as *const Point);
-
-    let da = a.dist_sq();
-    let db = b.dist_sq();
+    let (da, db) = unsafe {
+        let a = &*(a as *const Point);
+        let b = &*(b as *const Point);
+        (a.dist_sq(), b.dist_sq())
+    };
 
     if da < db { -1 } else if da > db { 1 } else { 0 }
 }
