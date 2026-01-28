@@ -1,9 +1,15 @@
 MINI_GMP = external/gmp/mini-gmp
 BUILD = build
 
-.PHONY: all clean
+.PHONY: all clean factorial hello dist errno state
 
 all: $(BUILD)/factorial $(BUILD)/hello $(BUILD)/dist $(BUILD)/errno $(BUILD)/state
+
+factorial: $(BUILD)/factorial
+hello: $(BUILD)/hello
+dist: $(BUILD)/dist
+errno: $(BUILD)/errno
+state: $(BUILD)/state
 
 $(BUILD):
 	mkdir -p $(BUILD)
@@ -52,4 +58,3 @@ $(BUILD)/state.o: state.c | $(BUILD)
 
 clean:
 	rm -rf $(BUILD)
-

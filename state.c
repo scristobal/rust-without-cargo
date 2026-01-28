@@ -1,3 +1,10 @@
+/**
+ * state.c - Thread-safe state management with atomic and thread-local storage
+ *
+ * This file demonstrates the use of C11 atomic operations and thread-local
+ * storage for managing both shared and per-thread state.
+ */
+
 #include <stdatomic.h>
 
 _Atomic int global_counter = 0;

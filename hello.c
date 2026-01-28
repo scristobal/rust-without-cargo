@@ -1,3 +1,9 @@
+/**
+ * hello.c - C/Rust FFI interop example
+ *
+ * Demonstrates C functions calling Rust functions across the FFI boundary.
+ */
+
 #include <stdio.h>
 
 extern const char* rust_callback(const char* s);

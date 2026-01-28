@@ -1,9 +1,14 @@
+//! Sharing data between threads using a C library
+//!
+//! Access a C global (atomic) static and internal
+//! thread-local static from Rust.
+
 use std::ffi::c_int;
 use std::sync::atomic::{AtomicI32, Ordering};
 use std::thread;
 
 unsafe extern "C" {
-    fn increment() -> c_int; 
+    fn increment() -> c_int;
     static global_counter: AtomicI32;
 }
 

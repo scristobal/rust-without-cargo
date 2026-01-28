@@ -1,3 +1,8 @@
+//! Using a C library from Rust
+//!
+//! This module provides a wrapper around the mini-gmp library
+//! to calculate the factorial of a number.
+
 use std::ffi::{c_char, c_int, c_long, c_ulong, c_void, CStr};
 use std::ptr;
 

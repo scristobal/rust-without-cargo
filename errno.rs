@@ -1,3 +1,9 @@
+//! Error handling across ffi boundary
+//!
+//! This module provides error handling across
+//! the ffi boundary using errno and strerror
+//! Only works on Linux
+
 use std::ffi::{c_char, c_int, CStr, CString};
 
 unsafe extern "C" {

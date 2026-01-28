@@ -1,3 +1,8 @@
+//! Rust and C FFI interleaving example
+//!
+//! Rust direct call to a C function, that calls a Rust
+//! callback function.
+
 use std::ffi::{CStr, CString, c_char};
 
 unsafe extern "C" {
