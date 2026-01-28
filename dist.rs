@@ -1,6 +1,6 @@
 //! Pass a Rust callback to C code
 //!
-//! The C qsort implementation takes a comparation funtion, in
+//! The C qsort implementation takes a comparator function, in
 //! this example we pass a Rust function and a Rust struct.
 
 use std::ffi::{c_int, c_void};
